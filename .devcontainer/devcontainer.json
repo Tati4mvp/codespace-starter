@@ -9,9 +9,11 @@
   // repo is just data, opened as a folder inside the same Codespace; it needs
   // no prebuild of its own.
 
-  // (Operational note, 2026-08-08: a trivial edit near this line re-fired
-  // the Codespaces prebuild after GitHub dropped the trigger for the
-  // 1.0.8 repin merge. Safe to delete whenever this file is next touched.)
+  // (Operational note: trivial edits near this line re-fire the Codespaces
+  // prebuild when a repin merge fails to trigger one — 2026-08-08 (GitHub
+  // dropped the trigger) and 2026-08-09 (merge landed while the region-edit
+  // prebuild was still running; concurrent runs are skipped, not queued).
+  // Safe to delete whenever this file is next touched.)
   // The PPBDS image, pinned to v1.1.0. Since v1.0.0 there is ONE image for
   // the whole org (ghcr.io/ppbds/devcontainer — it replaced the old
   // devcontainers/base + /dev + /student trio, and additionally bakes the
