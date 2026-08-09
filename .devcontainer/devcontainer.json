@@ -12,7 +12,7 @@
   // (Operational note, 2026-08-08: a trivial edit near this line re-fired
   // the Codespaces prebuild after GitHub dropped the trigger for the
   // 1.0.8 repin merge. Safe to delete whenever this file is next touched.)
-  // The PPBDS image, pinned to v1.0.8. Since v1.0.0 there is ONE image for
+  // The PPBDS image, pinned to v1.1.0. Since v1.0.0 there is ONE image for
   // the whole org (ghcr.io/ppbds/devcontainer — it replaced the old
   // devcontainers/base + /dev + /student trio, and additionally bakes the
   // package-development tooling: devtools, pkgdown, roxygen2, testthat,
@@ -60,7 +60,7 @@
   // OTHER repos (e.g., cloning a sibling package and pushing to it)
   // requires a one-time `gh auth login` per Codespace — that's by design,
   // not a bug. The built-in token is read-mostly outside the home repo.
-  "image": "ghcr.io/ppbds/devcontainer:1.0.8",
+  "image": "ghcr.io/ppbds/devcontainer:1.1.0",
 
   // NO postCreateCommand right now — RETIRED 2026-07-30. All course
   // packages, including primer.tutorials, ship at whatever versions the
