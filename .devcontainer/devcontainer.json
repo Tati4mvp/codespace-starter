@@ -9,6 +9,14 @@
   // repo is just data, opened as a folder inside the same Codespace; it needs
   // no prebuild of its own.
 
+  // (Operational note: trivial edits near this line re-fire the Codespaces
+  // prebuild when a repin merge fails to trigger one. Happened 2026-08-08
+  // (GitHub dropped the trigger), 2026-08-09 (merge landed while another
+  // prebuild ran; concurrent runs are skipped, not queued), and 2026-08-11
+  // (dropped again, no concurrent run — this is a recurring GitHub flake,
+  // so KEEP this note). Also note: an ordinary push to main touching this
+  // file does not reliably fire a prebuild either — the 2026-08-11 "better
+  // start up" push never triggered one.)
   // The PPBDS image, pinned to v1.1.1. Since v1.0.0 there is ONE image for
   // the whole org (ghcr.io/ppbds/devcontainer — it replaced the old
   // devcontainers/base + /dev + /student trio, and additionally bakes the
