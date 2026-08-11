@@ -107,7 +107,14 @@
   // students to STUDENT_WORKFLOW.md but deliberately does NOT auto-open it.
   // Absolute path via ${containerWorkspaceFolder} so it still resolves after a
   // student switches their open folder to their own repo. See welcome.sh.
-  "postAttachCommand": "bash ${containerWorkspaceFolder}/.devcontainer/welcome.sh",
+  //
+  // Object form (not a bare string) so the terminal tab is labeled with the
+  // short key ("welcome") instead of the full command line — Codespaces names
+  // the postAttach terminal after this string. Still a single command; the
+  // object form here is purely for the label.
+  "postAttachCommand": {
+    "welcome": "bash ${containerWorkspaceFolder}/.devcontainer/welcome.sh"
+  },
 
   "customizations": {
     "vscode": {
@@ -217,9 +224,22 @@
         // just the final output.
         "r.source.echo": true,
 
-        // Prevent VS Code from nagging to relaunch the terminal when
-        // environment variables change.
+        // Don't auto-relaunch terminals when extensions contribute environment
+        // variables after startup. A relaunch clears scrollback, and if it hit
+        // the postAttach terminal it would wipe the welcome banner — the whole
+        // point of welcome.sh. NOTE: this setting does NOT suppress the "⚠
+        // extensions want to relaunch the terminal" indicator — it CAUSES it
+        // (with auto-relaunch off, VS Code surfaces the pending changes as a
+        // warning instead). The indicator is hidden separately below.
         "terminal.integrated.environmentChangesRelaunch": false,
+
+        // Hide that ⚠ relaunch indicator. Pure noise for students: git auth in
+        // Codespaces terminals comes from the container's global credential
+        // helper (not the extension-injected env vars this warns about), we
+        // deliberately blank GITHUB_TOKEN/GH_TOKEN in terminals anyway (see
+        // terminal.integrated.env.linux above), and terminals opened after
+        // startup get the contributed environment normally.
+        "terminal.integrated.environmentChangesIndicator": "off",
 
         // NOTE — we want to suppress VS Code's Welcome / "Get Started" tab,
         // but there is currently NO way to do it from here. The setting that
