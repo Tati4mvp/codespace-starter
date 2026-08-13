@@ -6,6 +6,11 @@ settings. But this `codespace-starter` repo isn't *yours*, so you won't save
 your work here. Instead, you'll make your **own repo** and work in it. The
 tools travel with the Codespace, so your repo needs no setup of its own.
 
+> **On a Mac or PC, open Codespaces in Chrome or Edge — not Safari.** In
+> Safari, some panels draw in the wrong place on the screen (an R plot, for
+> example, can float over other tabs and block clicks). Any Chromium-based
+> browser works correctly.
+
 ## 1. Create or connect to your repo (one command)
 
 In the terminal:
