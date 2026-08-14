@@ -143,7 +143,16 @@
       // attach-time install needed a window reload. Ship a new version by
       // bumping RT_EXT_VERSION there and cutting an image release.
       "extensions": [
-        "reditorsupport.r",
+        // PINNED to 2.8.8 on purpose (2026-08-14). vscode-R 3.0.0 (in rc as
+        // of May 2026) replaces the session-watcher architecture with a
+        // bundled "sess" R package the image does not bake — an unpinned
+        // extension would auto-update every student Codespace the day it
+        // hits the Marketplace, breaking plotting with an install prompt
+        // students won't understand. Migrate DELIBERATELY: bake sess in the
+        // image, bump this pin, and drop the image's Rprofile.site .First
+        // shim (which 3.0.0 makes obsolete) in the same release. See
+        // REditorSupport/vscode-R#1696 for the R-4.6 background.
+        "reditorsupport.r@2.8.8",
         "quarto.quarto",
         "ritwickdey.LiveServer",
         "tomoki1207.pdf",
