@@ -97,6 +97,27 @@ else
   fail "prompt block duplicated in .bashrc (count: $n)"
 fi
 
+# ---- wrapper-install failure: banner must fall back to the long form ----
+# Simulate the install failing by making $HOME/.local/bin a regular FILE
+# (mkdir -p then fails even as root). welcome.sh is non-fatal by design, so
+# the banner must then advertise the long-form command instead of a
+# `connect-repo` that doesn't exist (Copilot review, PR #50).
+sandbox="$(mktemp -d)"
+mkdir -p "$sandbox/.local"
+: > "$sandbox/.local/bin"
+out3="$(HOME="$sandbox" bash "$here/welcome.sh" 2>/dev/null)"
+if grep -qF ".devcontainer/connect-repo.sh <insert-repo-name>" <<<"$out3"; then
+  ok "banner falls back to long form when wrapper install fails"
+else
+  fail "banner did not fall back to the long form on wrapper failure"
+fi
+if grep -qF " connect-repo <insert-repo-name>" <<<"$out3"; then
+  fail "banner still shows the short command despite failed wrapper install"
+else
+  ok "banner hides the short command on wrapper failure"
+fi
+rm -rf "$sandbox"
+
 # ---- verdict ------------------------------------------------------------
 if [[ "$fails" -gt 0 ]]; then
   echo "LAUNCHER TESTS: $fails failure(s)" >&2

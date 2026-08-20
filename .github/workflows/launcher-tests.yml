@@ -29,7 +29,10 @@ jobs:
       - id: get
         run: |
           img="$(grep -o 'ghcr\.io/ppbds/devcontainer:[0-9][0-9.]*' .devcontainer/devcontainer.json | head -1)"
-          test -n "$img"
+          if [ -z "$img" ]; then
+            echo "::error file=.devcontainer/devcontainer.json::could not extract the image pin (ghcr.io/ppbds/devcontainer:X.Y.Z) — did the pin line change format?"
+            exit 1
+          fi
           echo "image=$img" >> "$GITHUB_OUTPUT"
           echo "testing against $img"
 

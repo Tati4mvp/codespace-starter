@@ -83,6 +83,15 @@ printf '#!/usr/bin/env bash\nexec bash %q "$@"\n' "$here/connect-repo.sh" \
   > "$HOME/.local/bin/connect-repo"
 chmod +x "$HOME/.local/bin/connect-repo"
 
+# The banner advertises the short command ONLY if the wrapper really landed
+# (this script is deliberately non-fatal, so a failed install above must not
+# leave the banner teaching a command that won't work — Copilot review, PR
+# #50). Fallback is the long form, which always works from the starter folder.
+cmd="connect-repo"
+if [[ ! -x "$HOME/.local/bin/connect-repo" ]]; then
+  cmd=".devcontainer/connect-repo.sh"
+fi
+
 # Provenance line, read LIVE from the launcher checkout so it can never drift
 # from reality: the image pin straight from devcontainer.json, and the date of
 # this repo's last commit — which also captures VS Code settings / script
@@ -111,7 +120,7 @@ if [[ ! -f "$marker" ]]; then
 
    Start your own project (creates a new repo):
 
-       connect-repo <insert-repo-name>
+       ${cmd} <insert-repo-name>
 ════════════════════════════════════════════════════════════
 
 BANNER
