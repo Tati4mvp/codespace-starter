@@ -179,8 +179,8 @@ interactive pieces run in the browser, so you never need a server.
   up in a `.qmd`; render to HTML/PDF or publish a website with
   `quarto publish gh-pages`.
 - **Python** (pandas, numpy, scikit-learn, statsmodels, matplotlib/seaborn) —
-  if you'd rather use Python, in a `.qmd` Python chunk or a Jupyter notebook.
-  Need another package? `pip install <name>` works.
+  if you'd rather use Python, write Python chunks in a `.qmd`; `quarto render`
+  runs them. Need another package? `pip install <name>` works.
 
 **Make it interactive (still a static site)**
 - **Interactive charts / maps / tables** — `plotly`, `leaflet`, `DT` (R) or

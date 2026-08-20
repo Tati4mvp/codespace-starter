@@ -158,12 +158,22 @@
         "quarto.quarto",
         "ritwickdey.LiveServer",
         "tomoki1207.pdf",
-        "mechatroner.rainbow-csv",
-        // Python data science: language support + notebooks. Unlike the AI
-        // assistant panels above, these are ordinary language tooling that
-        // renders fine in the web Codespaces client.
-        "ms-python.python",
-        "ms-toolsai.jupyter"
+        "mechatroner.rainbow-csv"
+        // ALSO DELIBERATELY ABSENT (dropped 2026-08-20, David): the Python
+        // extensions (ms-python.python, ms-toolsai.jupyter). Students use
+        // only a handful of Activity Bar icons, and these two added Python/
+        // Jupyter icons plus Welcome-page walkthrough cards for tooling the
+        // course doesn't teach interactively. Removing them does NOT break
+        // the Python workflow that matters: `quarto render` of .qmd files
+        // with Python chunks drives the image's Jupyter engine from the CLI,
+        // no editor extension involved. What's lost is only the in-editor
+        // layer: .ipynb notebook UI, run-buttons on Python cells, Python
+        // IntelliSense. If the syllabus later adds interactive Python,
+        // re-add both lines AND re-add the python.defaultInterpreterPath /
+        // python.terminal.activateEnvironment settings (see git history at
+        // this line for the exact blocks and their reasoning — especially
+        // activateEnvironment: false, which prevented the extension from
+        // corrupting the R Tutorial terminal).
       ],
 
       "settings": {
@@ -175,18 +185,10 @@
         // versions ship it off. Canonical file: .devcontainer/AGENTS.md.
         "chat.useAgentsMdFile": true,
 
-        // Point the Python extension at the baked data-science venv so
-        // notebooks and scripts use the right interpreter out of the box
-        // (numpy/pandas/etc. importable, the "Python (data science)" kernel).
-        "python.defaultInterpreterPath": "/opt/venv/bin/python",
-
-        // Do NOT let the Python extension auto-`source .../activate` in every
-        // terminal. It injects that command into terminals it shouldn't touch —
-        // notably the R Tutorial terminal — corrupting whatever R command is
-        // running ("Execution halted"). It's also unnecessary: /opt/venv/bin is
-        // already first on PATH (image ENV), so `python`/`pip` resolve to the
-        // venv with no activation needed.
-        "python.terminal.activateEnvironment": false,
+        // (python.defaultInterpreterPath and python.terminal.activateEnvironment
+        // were removed 2026-08-20 along with the Python extensions — see the
+        // DELIBERATELY ABSENT note in the extensions list above. Restore both
+        // settings if those extensions ever return.)
 
         // Blank the built-in, repo-scoped GITHUB_TOKEN / GH_TOKEN in integrated
         // terminals — INCLUDING the R console (arf), which the R extension
