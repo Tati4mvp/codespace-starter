@@ -67,15 +67,29 @@ BASHRC
 fi
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # codespace-starter/.devcontainer
-guide="$here/STUDENT_WORKFLOW.md"
 marker="$HOME/.student_repo"
 
-# Provenance line for the banner, read LIVE from the launcher checkout so it
-# can never drift from reality: the image pin straight from devcontainer.json,
-# and the date of this repo's last commit — which also captures VS Code
-# settings / script changes, i.e. "the setup state this Codespace was born
-# from". Both reads are guarded; on any failure the line is simply omitted
-# (an empty line in the banner), never an error.
+# Students run `connect-repo <name>` — a wrapper in ~/.local/bin, which is
+# already on PATH in every student shell (the image's tool installers append
+# it to the profile, and Ubuntu's stock ~/.profile picks it up too). A wrapper,
+# NOT a symlink: connect-repo.sh locates itself via BASH_SOURCE, and through a
+# symlink it would resolve to ~/.local/bin and break; `exec` by absolute path
+# keeps the real location. Rewritten on every attach (cheap, self-healing).
+# The long-form `.devcontainer/connect-repo.sh` still works from the starter
+# folder; the wrapper additionally works from ANY folder, including the
+# student's own repo after they switch.
+mkdir -p "$HOME/.local/bin"
+printf '#!/usr/bin/env bash\nexec bash %q "$@"\n' "$here/connect-repo.sh" \
+  > "$HOME/.local/bin/connect-repo"
+chmod +x "$HOME/.local/bin/connect-repo"
+
+# Provenance line, read LIVE from the launcher checkout so it can never drift
+# from reality: the image pin straight from devcontainer.json, and the date of
+# this repo's last commit — which also captures VS Code settings / script
+# changes, i.e. "the setup state this Codespace was born from". Printed ABOVE
+# the banner box on purpose (David, 2026-08-15): it is instructor-facing
+# metadata, not student instructions. Both reads are guarded; on any failure
+# the line is simply omitted, never an error.
 img="$(grep -o 'ghcr\.io/ppbds/devcontainer:[0-9][0-9.]*' "$here/devcontainer.json" 2>/dev/null | head -1)"
 upd="$(git -C "$here/.." log -1 --format='%cd' --date=format:'%Y-%m-%d' 2>/dev/null)"
 prov=""
@@ -89,19 +103,15 @@ fi
 # start" banner. Once a repo exists there's nothing more to say — stay silent
 # (no returning banner; the short prompt already shows which folder you're in).
 if [[ ! -f "$marker" ]]; then
+  [[ -n "$prov" ]] && printf '\n%s\n' "$prov"
   cat <<BANNER
 
 ════════════════════════════════════════════════════════════
    ✅  YOUR CODESPACE IS READY
 
    Start your own project (creates a new repo):
-       .devcontainer/connect-repo.sh <repo-name>
 
-   Full guide: ${guide}
-
-${prov}
-
-   Type \`clear\` to remove this banner.
+       connect-repo <insert-repo-name>
 ════════════════════════════════════════════════════════════
 
 BANNER
