@@ -1,0 +1,51 @@
+# Launcher tests: run welcome.sh and the connect-repo wrapper inside the SAME
+# pinned image students get, and assert the banner, wrapper, and usage paths
+# behave (see .devcontainer/tests/launcher-tests.sh for exactly what's
+# covered, and what deliberately isn't — anything needing a GitHub login).
+#
+# The image tag is read LIVE from devcontainer.json by the first job, so this
+# workflow is NOT an extra location for the pin-bump checklist (the "bump it
+# everywhere" list in devcontainer.json / the devcontainers runbook stays at
+# five). The container runs as its default user (root), matching the tutorial
+# repos' student-env jobs — a non-root user hits /github/home permission
+# problems in container jobs.
+name: launcher-tests
+
+on:
+  push:
+    branches: [main]
+    paths: ['.devcontainer/**', '.github/workflows/launcher-tests.yml']
+  pull_request:
+    paths: ['.devcontainer/**', '.github/workflows/launcher-tests.yml']
+  workflow_dispatch:
+
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.get.outputs.image }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: get
+        run: |
+          img="$(grep -o 'ghcr\.io/ppbds/devcontainer:[0-9][0-9.]*' .devcontainer/devcontainer.json | head -1)"
+          test -n "$img"
+          echo "image=$img" >> "$GITHUB_OUTPUT"
+          echo "testing against $img"
+
+  test:
+    needs: pin
+    runs-on: ubuntu-latest
+    name: launcher tests in the student image
+    container:
+      image: ${{ needs.pin.outputs.image }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run launcher tests
+        run: |
+          # The checkout is owned by a different uid than the container user;
+          # welcome.sh's provenance line runs `git log` here and would hit
+          # git's dubious-ownership refusal without this.
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          bash .devcontainer/tests/launcher-tests.sh
