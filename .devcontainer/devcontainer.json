@@ -114,11 +114,12 @@
   // student switches their open folder to their own repo. See welcome.sh.
   //
   // Object form (not a bare string) so the terminal tab is labeled with the
-  // short key ("welcome") instead of the full command line — Codespaces names
-  // the postAttach terminal after this string. Still a single command; the
-  // object form here is purely for the label.
+  // short key instead of the full command line — Codespaces names the
+  // postAttach terminal after this string. Still a single command; the object
+  // form here is purely for the label. The platform prepends "Codespaces: ",
+  // so the tab reads "Codespaces: Welcome!" — the prefix is not removable.
   "postAttachCommand": {
-    "welcome": "bash ${containerWorkspaceFolder}/.devcontainer/welcome.sh"
+    "Welcome!": "bash ${containerWorkspaceFolder}/.devcontainer/welcome.sh"
   },
 
   "customizations": {

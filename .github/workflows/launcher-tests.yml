@@ -36,6 +36,16 @@ jobs:
           echo "image=$img" >> "$GITHUB_OUTPUT"
           echo "testing against $img"
 
+  # shellcheck runs on the plain runner (preinstalled there, absent from the
+  # student image) and enforces the repo's stated shell convention, which was
+  # honored but unenforced until now. All three scripts were clean when this
+  # was added, so any finding is a genuine regression.
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: shellcheck .devcontainer/welcome.sh .devcontainer/connect-repo.sh .devcontainer/tests/launcher-tests.sh
+
   test:
     needs: pin
     runs-on: ubuntu-latest

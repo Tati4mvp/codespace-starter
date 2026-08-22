@@ -118,6 +118,18 @@ else
 fi
 rm -rf "$sandbox"
 
+# ---- terminal label -----------------------------------------------------
+# The postAttachCommand key is what Codespaces uses to label the welcome
+# terminal ("Codespaces: Welcome!"). The label itself is applied by the
+# platform and can't be asserted here — this only guards the key from a
+# silent revert.
+# shellcheck disable=SC2016  # ${containerWorkspaceFolder} is literal JSON text, not a shell expansion
+if grep -qF '"Welcome!": "bash ${containerWorkspaceFolder}/.devcontainer/welcome.sh"' "$here/devcontainer.json"; then
+  ok "postAttachCommand key is 'Welcome!'"
+else
+  fail "postAttachCommand key is not 'Welcome!' (terminal label would regress)"
+fi
+
 # ---- verdict ------------------------------------------------------------
 if [[ "$fails" -gt 0 ]]; then
   echo "LAUNCHER TESTS: $fails failure(s)" >&2
