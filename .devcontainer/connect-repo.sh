@@ -4,7 +4,9 @@
 # Codespace launched off codespace-starter. If a repo by the given name already
 # exists on your GitHub account, it's cloned; otherwise it's created.
 #
-#   Usage:  .devcontainer/connect-repo.sh [--no-agents] <repo-name>
+#   Usage:  connect-repo [--no-agents] <repo-name>
+#   (welcome.sh installs the `connect-repo` wrapper on PATH; invoking
+#   .devcontainer/connect-repo.sh directly works too)
 #
 # By default the new repo gets a copy of AGENTS.md (guidance on how AI
 # assistants should work with students in this course); --no-agents skips it.
@@ -37,7 +39,7 @@ set -- ${positional+"${positional[@]}"}
 # of the side-effecting steps below so `--help` never changes anything.
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   cat <<'HELP'
-connect-repo.sh — create or connect to your GitHub work repo
+connect-repo — create or connect to your GitHub work repo
 
 This script just automates a few GitHub steps so you can start fast. There is
 no magic here: below is every command it runs, what it means, and how you could
@@ -83,16 +85,16 @@ The script also drops your terminal into the new folder and smooths a couple of
 Codespace quirks, but steps 1–4 above are the whole GitHub story. Run them by
 hand any time you'd rather not use the script.
 
-  Usage:  .devcontainer/connect-repo.sh [--no-agents] <repo-name>
+  Usage:  connect-repo [--no-agents] <repo-name>
 HELP
   exit 0
 fi
 
 repo="${1:-}"
 if [[ -z "$repo" ]]; then
-  echo "Usage: .devcontainer/connect-repo.sh [--no-agents] <repo-name>" >&2
-  echo "       .devcontainer/connect-repo.sh owner/<repo-name>  (connect to an org/other repo)" >&2
-  echo "       .devcontainer/connect-repo.sh --help   (explains the git commands it runs)" >&2
+  echo "Usage: connect-repo [--no-agents] <repo-name>" >&2
+  echo "       connect-repo owner/<repo-name>  (connect to an org/other repo)" >&2
+  echo "       connect-repo --help   (explains the git commands it runs)" >&2
   exit 2
 fi
 

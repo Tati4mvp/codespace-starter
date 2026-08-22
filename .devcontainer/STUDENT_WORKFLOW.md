@@ -16,7 +16,7 @@ tools travel with the Codespace, so your repo needs no setup of its own.
 In the terminal:
 
 ```bash
-.devcontainer/connect-repo.sh my-class-work
+connect-repo my-class-work
 ```
 
 (Use any name in place of `my-class-work`.) The first time, a browser prompt
@@ -83,7 +83,7 @@ https://raw.githubusercontent.com/<your-username>/<your-repo>/main/plot.png
   and clones it instead of erroring.
 - **Connecting to someone else's repo** (an org or another user — e.g. an
   assignment repo): pass `owner/name`, like
-  `.devcontainer/connect-repo.sh PPBDS/some-assignment`. It clones into
+  `connect-repo PPBDS/some-assignment`. It clones into
   `/workspaces/some-assignment`. (You need read access to a private one.)
 - **If `git push` ever says "Author identity unknown":**
   ```bash
@@ -91,7 +91,7 @@ https://raw.githubusercontent.com/<your-username>/<your-repo>/main/plot.png
   git config --global user.email "you@example.com"
   ```
 
-## Under the hood: what `connect-repo.sh` actually does
+## Under the hood: what `connect-repo` actually does
 
 There is no magic in the script — it just runs a handful of `gh` (GitHub's
 command-line tool) and `git` commands for you. You will use these same
@@ -165,7 +165,7 @@ git push
 
 What you'd give up by going manual: the auto-opening of new terminals in
 your repo, the `AGENTS.md` copy, and the ready-banner bookkeeping — all
-conveniences, none essential. Run `.devcontainer/connect-repo.sh --help` to
+conveniences, none essential. Run `connect-repo --help` to
 see the same story told by the script itself.
 
 ## What's in your workshop (and when to use what)
@@ -179,8 +179,8 @@ interactive pieces run in the browser, so you never need a server.
   up in a `.qmd`; render to HTML/PDF or publish a website with
   `quarto publish gh-pages`.
 - **Python** (pandas, numpy, scikit-learn, statsmodels, matplotlib/seaborn) —
-  if you'd rather use Python, in a `.qmd` Python chunk or a Jupyter notebook.
-  Need another package? `pip install <name>` works.
+  if you'd rather use Python, write Python chunks in a `.qmd`; `quarto render`
+  runs them. Need another package? `pip install <name>` works.
 
 **Make it interactive (still a static site)**
 - **Interactive charts / maps / tables** — `plotly`, `leaflet`, `DT` (R) or
@@ -198,7 +198,7 @@ interactive pieces run in the browser, so you never need a server.
   `aider`. Sign in (or set an API key) and ask for coding help. (They're
   terminal tools by design — they work on every device, even a tablet.)
 - **AGENTS.md** — `connect-repo` puts this file in your repo (skip it with
-  `connect-repo.sh --no-agents <name>`). It tells AI assistants — including
+  `connect-repo --no-agents <name>`). It tells AI assistants — including
   GitHub Copilot — how to work with you in this course: short, narrated
   steps and brief answers, so you can follow what's happening.
 - **`connect-repo.sh`** — create or connect to your work repo (run `--help` to

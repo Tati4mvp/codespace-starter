@@ -17,7 +17,7 @@
   // so KEEP this note). Also note: an ordinary push to main touching this
   // file does not reliably fire a prebuild either — the 2026-08-11 "better
   // start up" push never triggered one.)
-  // The PPBDS image, pinned to v1.1.3. Since v1.0.0 there is ONE image for
+  // The PPBDS image, pinned to v1.1.4. Since v1.0.0 there is ONE image for
   // the whole org (ghcr.io/ppbds/devcontainer — it replaced the old
   // devcontainers/base + /dev + /student trio, and additionally bakes the
   // package-development tooling: devtools, pkgdown, roxygen2, testthat,
@@ -65,7 +65,7 @@
   // OTHER repos (e.g., cloning a sibling package and pushing to it)
   // requires a one-time `gh auth login` per Codespace — that's by design,
   // not a bug. The built-in token is read-mostly outside the home repo.
-  "image": "ghcr.io/ppbds/devcontainer:1.1.3",
+  "image": "ghcr.io/ppbds/devcontainer:1.1.4",
 
   // NO postCreateCommand right now — RETIRED 2026-07-30. All course
   // packages, including primer.tutorials, ship at whatever versions the
@@ -106,17 +106,20 @@
   // staring at a bare prompt. postAttachCommand runs in a VISIBLE terminal,
   // and the lifecycle order (postCreate → postStart → postAttach) means it
   // fires after any create-time work — so if the postCreateCommand above is
-  // ever revived, the banner stays a true "ready" signal. It points
-  // students to STUDENT_WORKFLOW.md but deliberately does NOT auto-open it.
+  // ever revived, the banner stays a true "ready" signal. The banner shows
+  // ONE next action (`connect-repo <name>` — welcome.sh installs that
+  // wrapper on PATH); STUDENT_WORKFLOW.md is taught in class, deliberately
+  // neither linked in the banner nor auto-opened.
   // Absolute path via ${containerWorkspaceFolder} so it still resolves after a
   // student switches their open folder to their own repo. See welcome.sh.
   //
   // Object form (not a bare string) so the terminal tab is labeled with the
-  // short key ("welcome") instead of the full command line — Codespaces names
-  // the postAttach terminal after this string. Still a single command; the
-  // object form here is purely for the label.
+  // short key instead of the full command line — Codespaces names the
+  // postAttach terminal after this string. Still a single command; the object
+  // form here is purely for the label. The platform prepends "Codespaces: ",
+  // so the tab reads "Codespaces: Welcome!" — the prefix is not removable.
   "postAttachCommand": {
-    "welcome": "bash ${containerWorkspaceFolder}/.devcontainer/welcome.sh"
+    "Welcome!": "bash ${containerWorkspaceFolder}/.devcontainer/welcome.sh"
   },
 
   "customizations": {
@@ -156,12 +159,22 @@
         "quarto.quarto",
         "ritwickdey.LiveServer",
         "tomoki1207.pdf",
-        "mechatroner.rainbow-csv",
-        // Python data science: language support + notebooks. Unlike the AI
-        // assistant panels above, these are ordinary language tooling that
-        // renders fine in the web Codespaces client.
-        "ms-python.python",
-        "ms-toolsai.jupyter"
+        "mechatroner.rainbow-csv"
+        // ALSO DELIBERATELY ABSENT (dropped 2026-08-20, David): the Python
+        // extensions (ms-python.python, ms-toolsai.jupyter). Students use
+        // only a handful of Activity Bar icons, and these two added Python/
+        // Jupyter icons plus Welcome-page walkthrough cards for tooling the
+        // course doesn't teach interactively. Removing them does NOT break
+        // the Python workflow that matters: `quarto render` of .qmd files
+        // with Python chunks drives the image's Jupyter engine from the CLI,
+        // no editor extension involved. What's lost is only the in-editor
+        // layer: .ipynb notebook UI, run-buttons on Python cells, Python
+        // IntelliSense. If the syllabus later adds interactive Python,
+        // re-add both lines AND re-add the python.defaultInterpreterPath /
+        // python.terminal.activateEnvironment settings (see git history at
+        // this line for the exact blocks and their reasoning — especially
+        // activateEnvironment: false, which prevented the extension from
+        // corrupting the R Tutorial terminal).
       ],
 
       "settings": {
@@ -173,18 +186,10 @@
         // versions ship it off. Canonical file: .devcontainer/AGENTS.md.
         "chat.useAgentsMdFile": true,
 
-        // Point the Python extension at the baked data-science venv so
-        // notebooks and scripts use the right interpreter out of the box
-        // (numpy/pandas/etc. importable, the "Python (data science)" kernel).
-        "python.defaultInterpreterPath": "/opt/venv/bin/python",
-
-        // Do NOT let the Python extension auto-`source .../activate` in every
-        // terminal. It injects that command into terminals it shouldn't touch —
-        // notably the R Tutorial terminal — corrupting whatever R command is
-        // running ("Execution halted"). It's also unnecessary: /opt/venv/bin is
-        // already first on PATH (image ENV), so `python`/`pip` resolve to the
-        // venv with no activation needed.
-        "python.terminal.activateEnvironment": false,
+        // (python.defaultInterpreterPath and python.terminal.activateEnvironment
+        // were removed 2026-08-20 along with the Python extensions — see the
+        // DELIBERATELY ABSENT note in the extensions list above. Restore both
+        // settings if those extensions ever return.)
 
         // Blank the built-in, repo-scoped GITHUB_TOKEN / GH_TOKEN in integrated
         // terminals — INCLUDING the R console (arf), which the R extension
