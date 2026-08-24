@@ -1,0 +1,52 @@
+---
+title: "Exploring Storms"
+author: "T"
+format: html
+execute:
+  echo: false
+---
+
+```{r}
+#| label: setup
+#| message: false
+library(tidyverse)
+```
+
+```{r}
+#| label: storm-plot
+storms |>
+  distinct(year, name) |>
+  count(year) |>
+  ggplot(aes(x = year, y = n)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_point(color = "steelblue") +
+  labs(
+    title = "Number of Named Storms per Year",
+    subtitle = "Counts based on the dplyr storms dataset",
+    x = "Year",
+    y = "Number of Named Storms"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+#| label: storms_recent
+#| cache: true
+storms_recent <- storms |>
+  filter(year >= 2000) |>
+  select(year, name, status, wind, pressure)
+```
+
+```{r}
+#| label: plot-wind-pressure
+ggplot(storms_recent, aes(x = wind, y = pressure, color = status)) +
+  geom_point(alpha = 0.3) +
+  labs(
+    title = "Wind Speed and Air Pressure in Atlantic Storms",
+    subtitle = "Stronger storms combine faster winds with lower pressure",
+    x = "Wind Speed (knots)",
+    y = "Air Pressure (millibars)",
+    color = "Status"
+  )
+```
+
