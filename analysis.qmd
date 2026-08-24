@@ -15,16 +15,30 @@ library(tidyverse)
 ```{r}
 #| label: storm-plot
 storms |>
-  distinct(year, name) |>
-  count(year) |>
-  ggplot(aes(x = year, y = n)) +
-  geom_line(color = "steelblue", linewidth = 1) +
-  geom_point(color = "steelblue") +
+  filter(status %in% c("tropical depression", "tropical storm", "hurricane")) |>
+  distinct(year, name, status) |>
+  count(year, status) |>
+  complete(year, status, fill = list(n = 0)) |>
+  mutate(status = factor(
+    status,
+    levels = c("tropical depression", "tropical storm", "hurricane"),
+    labels = c("Tropical Depression", "Tropical Storm", "Hurricane")
+  )) |>
+  ggplot(aes(x = year, y = n, fill = status)) +
+  geom_area(alpha = 0.85, color = "white", linewidth = 0.2) +
+  scale_fill_manual(
+    values = c(
+      "Tropical Depression" = "lightblue",
+      "Tropical Storm" = "orange",
+      "Hurricane" = "darkred"
+    )
+  ) +
   labs(
-    title = "Number of Named Storms per Year",
-    subtitle = "Counts based on the dplyr storms dataset",
+    title = "Storm Counts by Type per Year",
+    subtitle = "Annual counts of tropical depressions, tropical storms, and hurricanes",
     x = "Year",
-    y = "Number of Named Storms"
+    y = "Number of Storms",
+    fill = "Storm Type"
   ) +
   theme_minimal()
 ```
